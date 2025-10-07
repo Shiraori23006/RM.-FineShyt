@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+
+<style>
+    #forgot{
+        color: blue;
+        text-decoration: none;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .container {
+        border: 2px solid #FBC02D;
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 95%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        color: #FBC02D;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required placeholder="Enter your username">
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required placeholder="Enter your password">
+        
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: small; margin-left: 0%;">
+            <label for="remember">
+                <input type="checkbox" name="remember">Remember Me
+            </label>
+            <a id="forgot" href="#">Forgot Password?</a>
+        </div>
+
+        <button type="submit" onclick="login()">Login</button>
+        </div>
+
+    <script>
+        function login(){
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+
+            if(username === "admin" && password === "admin123"){
+                alert("Login Sukses");
+                window.location.href = "dashboard.html"; // Redirect to dashboard
+            } else {
+                alert("Username atau password salah");
+            }
+        }
+    </script>
+</body>
+</html>

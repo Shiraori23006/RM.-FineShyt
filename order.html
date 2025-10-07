@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #fff;
+      text-align: center;
+    }
+
+    header {
+      width: 100%;
+      background-color: #4CAF50;
+      padding: 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
+      margin: auto 25px;
+      font-size: 18px;
+    }
+
+    a:hover {
+      color: #185e07;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    main {
+      margin-top: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 400px;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #000;
+      padding: 10px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    button {
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #388E3C;
+    }
+
+    select {
+      margin-top: 10px;
+      padding: 5px;
+    }
+
+    .container {
+      border: 2px solid orange;
+      border-radius: 6px;
+      padding: 20px;
+      margin-top: 30px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="./dashboard.html">Dashboard</a>
+    <a href="./order.html">Order</a>
+    <a style="margin-left: auto; margin-right: 50px;" onclick="logout()">Logout</a>
+  </header>
+
+  <main>
+    <div class="container">
+      <h2>Pesanan Anda</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Menu</th>
+            <th>Jumlah</th>
+            <th>Harga</th>
+          </tr>
+        </thead>
+        <tbody id="tabel-pesanan"></tbody>
+      </table>
+
+      <p>Total: <span id="total-harga">Rp 0</span></p>
+
+      <label for="metode">Metode Pembayaran:</label>
+      <br>
+      <select id="metode">
+        <option value="">Pilih Metode Pembayaran</option>
+        <option value="Tunai">Tunai</option>
+        <option value="QRIS">QRIS</option>
+        <option value="Transfer">Transfer</option>
+      </select>
+      <br><br>
+
+      <button onclick="checkout()">Bayar</button>
+      <button onclick="resetPesanan()">Reset</button>
+    </div>
+  </main>
+
+  <script>
+    // Ambil data pesanan dari localStorage
+    let pesanan = JSON.parse(localStorage.getItem("pesanan")) || [];
+
+    const tabel = document.getElementById("tabel-pesanan");
+    const totalTag = document.getElementById("total-harga");
+
+    function tampilkanPesanan() {
+      tabel.innerHTML = "";
+      let total = 0;
+
+      pesanan.forEach((item, index) => {
+        const subtotal = item.harga * item.jumlah;
+        total += subtotal;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.nama}</td>
+          <td>
+            <button onclick="kurang(${index})">-</button>
+            ${item.jumlah}
+            <button onclick="tambah(${index})">+</button>
+          </td>
+          <td>Rp ${subtotal.toLocaleString("id-ID")}</td>
+        `;
+        tabel.appendChild(row);
+      });
+
+      totalTag.textContent = `Rp ${total.toLocaleString("id-ID")}`;
+    }
+
+    function tambah(index) {
+      pesanan[index].jumlah++;
+      localStorage.setItem("pesanan", JSON.stringify(pesanan));
+      tampilkanPesanan();
+    }
+
+    function kurang(index) {
+      if (pesanan[index].jumlah > 1) {
+        pesanan[index].jumlah--;
+      } else {
+        pesanan.splice(index, 1);
+      }
+      localStorage.setItem("pesanan", JSON.stringify(pesanan));
+      tampilkanPesanan();
+    }
+
+    function resetPesanan() {
+      if (confirm("Yakin ingin menghapus semua pesanan?")) {
+        pesanan = [];
+        localStorage.removeItem("pesanan");
+        tampilkanPesanan();
+      }
+    }
+
+    function checkout() {
+      const metode = document.getElementById("metode").value;
+      if (pesanan.length === 0) {
+        alert("Tidak ada pesanan!");
+        return;
+      }
+      if (!metode) {
+        alert("Pilih metode pembayaran terlebih dahulu!");
+        return;
+      }
+
+      alert(`Pembayaran berhasil!\nMetode: ${metode}`);
+      pesanan = [];
+      localStorage.removeItem("pesanan");
+      tampilkanPesanan();
+    }
+
+    function logout() {
+      alert("Anda telah logout");
+      localStorage.clear();
+      window.location.href = "./index.html";
+    }
+
+    // Jalankan pertama kali
+    tampilkanPesanan();
+  </script>
+
+</body>
+</html>
